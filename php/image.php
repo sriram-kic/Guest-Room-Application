@@ -1,6 +1,6 @@
 <?php
 
-include("config.php");
+include("connect.php");
 
 $filePath = $_GET['file'];
 

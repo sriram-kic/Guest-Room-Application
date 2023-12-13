@@ -1,6 +1,6 @@
 <?php
 
-include("config.php");
+include("connect.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["roomId"])) {
     $roomId = $_POST["roomId"];

@@ -1,5 +1,5 @@
 <?php
-include "config.php";
+include "connect.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $property_name = $_POST["property_name"];

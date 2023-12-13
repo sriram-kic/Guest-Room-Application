@@ -1,5 +1,5 @@
 <?php
-include("config.php");
+include("connect.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve the room ID from the POST data

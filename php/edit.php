@@ -1,5 +1,5 @@
 <?php
-include "config.php";
+include "connect.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $roomId = $_POST["room_id"];

@@ -1,5 +1,5 @@
 <?php
-include("config.php");
+include("connect.php");
 
 if (isset($_POST['ownerSignupForm']) || isset($_POST['customerSignupForm'])) {
     include("config.php");

@@ -1,6 +1,6 @@
 <?php
 // Include your database configuration file
-include "config.php";
+include "connect.php";
 
 
 // Fetch data from the database
