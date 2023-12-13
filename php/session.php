@@ -1,4 +1,6 @@
+
 <?php
+include "connect.php";
 session_start();
 
 // If the user is not logged in, redirect to the login page
@@ -7,8 +9,12 @@ if (!isset($_SESSION['login'])) {
     exit();
 } else {
     // User is logged in, retrieve user information
-    $username = $_SESSION['login_user']; // Username
+    $id = $_SESSION['id']; // User ID
     $role = $_SESSION['role']; // User's role
 }
-// Use $username and $role as needed in your code...
+
+function isUserLoggedIn($userId) {
+    // Check if the provided user ID matches the logged-in user ID
+    return isset($_SESSION['login']) && $_SESSION['id'] == $userId;
+}
 ?>

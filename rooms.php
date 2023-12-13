@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,10 +21,10 @@
     <!-- Add these lines before your script -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
     <script src="js/logout.js"></script>
     <script src="js/multipleimage.js"></script>
     <script src="js/display.js"></script>
+
 
 
 </head>
@@ -177,13 +179,133 @@
             </div>
         </div>
 
-            <div class="row" id="cardContainer">
+        <div class="row" id="cardContainer"></div>
 
-
+        <!-- Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                <form id="EditRoom" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="property_name" class="form-label">Property Name:</label>
+                        <input type="text" class="form-control" id="editable_property_name" name="property_name" value="<?php echo isset($property_name) ? $property_name : ''; ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="room_name_number" class="form-label">Room Number:</label>
+                        <input type="text" class="form-control" id="editable_room_number" name="room_number" value="<?php echo isset($room_number) ? $room_number : ''; ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="room_type" class="form-label">Room Type:</label>
+                        <select class="form-select" id="editable_room_type" name="room_type">
+                            <option value="single" <?php echo (isset($room_type) && $room_type === 'single') ? 'selected' : ''; ?>>Single Room</option>
+                            <option value="double" <?php echo (isset($room_type) && $room_type === 'double') ? 'selected' : ''; ?>>Double Room</option>
+                            <option value="suite" <?php echo (isset($room_type) && $room_type === 'suite') ? 'selected' : ''; ?>>Suite</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="num_of_beds" class="form-label">Number of Beds:</label>
+                        <input type="number" class="form-control" id="editable_num_of_beds" name="num_of_beds">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="floor_size" class="form-label">Floor Size (in square feet):</label>
+                        <input type="number" class="form-control" id="editable_floor_size" name="floor_size">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="min_booking_period" class="form-label">Min Booking Period:</label>
+                        <input type="number" class="form-control" id="editable_min_booking_period" name="min_booking_period">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="max_booking_period" class="form-label">Max Booking Period:</label>
+                        <input type="number" class="form-control" id="editable_max_booking_period" name="max_booking_period">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rent_per_day" class="form-label">Rent per Day:</label>
+                        <input type="number" class="form-control" id="editable_rent_per_day" name="rent_per_day">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address:</label>
+                        <input type="text" class="form-control" id="editable_address" name="address">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City:</label>
+                        <input type="text" class="form-control" id="city" name="city">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="country" class="form-label">Country:</label>
+                        <input type="text" class="form-control" id="editable_country" name="country">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact_name" class="form-label">Contact Name:</label>
+                        <input type="text" class="form-control" id="editable_contact_name" name="contact_name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact_email" class="form-label">Contact Email:</label>
+                        <input type="email" class="form-control" id="editable_contact_email" name="contact_email">
+                    </div>
+
+                    <div class="mb-3 input-group">
+                        <select class="form-select country-code-select" style="width: auto;">
+                            <option value="+1">+1 (USA)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+91">+91 (India)</option>
+                        </select>
+                        <input type="tel" class="form-control" id="editable_contact_phone" name="contact_phone" placeholder="Phone Number">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Amenities:</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="editable_wifi" name="amenities[]" value="Wifi">
+                            <label class="form-check-label" for="wifi">Wifi</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="parking" name="amenities[]" value="Parking">
+                            <label class="form-check-label" for="parking">Parking</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="tv" name="amenities[]" value="TV">
+                            <label class="form-check-label" for="tv">TV</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="ac" name="amenities[]" value="Air Conditioning">
+                            <label class="form-check-label" for="ac">Air Conditioning</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="additional_details" class="form-label">Additional Details:</label>
+                        <textarea class="form-control" id="editable_additional_details" name="additional_details" rows="4"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
+      
 </body>
 
 </html>

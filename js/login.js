@@ -21,7 +21,7 @@ $(document).on('submit', '#login', function(e) {
                 ).then((result) => {
                     if (result.isConfirmed) {
                         if (res.user_role === 'OWNER') {
-                            window.location.href = "rooms.html";
+                            window.location.href = "rooms.php";
                         } 
                         else if (res.user_role === 'CUSTOMER') {
                             window.location.href = "customer.html";

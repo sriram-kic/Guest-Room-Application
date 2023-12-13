@@ -5,7 +5,7 @@ $(document).on('submit', '#ownerSignupForm', function(e) {
     formData.append("ownerSignupForm", true);
     $.ajax({
         type: "POST",
-        url: "php/register.php",
+        url: "php/register.html",
         data: formData,
         processData: false,
         contentType: false,
@@ -48,7 +48,7 @@ $(document).on('submit', '#customerSignupForm', function(e) {
     formData.append("customerSignupForm", true);
     $.ajax({
         type: "POST",
-        url: "php/register.php",
+        url: "php/register.html",
         data: formData,
         processData: false,
         contentType: false,
