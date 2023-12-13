@@ -1,195 +1,219 @@
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-            crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="js/logout.js"></script>
-        <script src="js/multipleimage.js"></script>
-        <script src="js/display.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <!-- Add these lines before your script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-    </head>
+    <script src="js/logout.js"></script>
+    <script src="js/multipleimage.js"></script>
+<script src="js/display.js"></script>
 
-    <body>
-        <div class="container-fluid">
-            <div class="mb-3">
-                <h4>Owner Dashboard</h4>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="mb-3">
+            <h4>Owner Dashboard</h4>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-danger" id="logoutBtn" type="button">Log Out</button>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" href="#collapseWidthExample"
+                role="button" aria-expanded="false" aria-controls="collapseExample">
+                Create Rooms
+            </button>
+        </div>
+
+
+        <div style="min-height: 120px;">
+            <div class="collapse collapse-horizontal" id="collapseWidthExample">
+                <div class="card card-body">
+                    <!-- Form for room management -->
+                    <form id="roomForm" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="property_name" class="form-label">Property Name:</label>
+                            <input type="text" class="form-control" id="property_name" name="property_name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="room_name_number" class="form-label">Room Number:</label>
+                            <input type="text" class="form-control" id="room_number" name="room_number">
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="room_type" class="form-label">Room Type:</label>
+                            <select class="form-select" id="room_type" name="room_type">
+                                <option value="single">Single Room</option>
+                                <option value="double">Double Room</option>
+                                <option value="suite">Suite</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="num_of_beds" class="form-label">Number of Beds:</label>
+                            <input type="number" class="form-control" id="num_of_beds" name="num_of_beds">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="floor_size" class="form-label">Floor Size (in square feet):</label>
+                            <input type="number" class="form-control" id="floor_size" name="floor_size">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="min_booking_period" class="form-label">Min Booking Period:</label>
+                            <input type="number" class="form-control" id="min_booking_period" name="min_booking_period">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="max_booking_period" class="form-label">Max Booking Period:</label>
+                            <input type="number" class="form-control" id="max_booking_period" name="max_booking_period">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rent_per_day" class="form-label">Rent per Day:</label>
+                            <input type="number" class="form-control" id="rent_per_day" name="rent_per_day">
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address:</label>
+                            <input type="text" class="form-control" id="address" name="address">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City:</label>
+                            <input type="text" class="form-control" id="city" name="city">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Country:</label>
+                            <input type="text" class="form-control" id="country" name="country">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contact_name" class="form-label">Contact Name:</label>
+                            <input type="text" class="form-control" id="contact_name" name="contact_name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contact_email" class="form-label">Contact Email:</label>
+                            <input type="email" class="form-control" id="contact_email" name="contact_email">
+                        </div>
+
+                        <div class="mb-3 input-group">
+                            <select class="form-select country-code-select" style="width: auto;">
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                            </select>
+                            <input type="tel" class="form-control" id="contact_phone" name="contact_phone"
+                                placeholder="Phone Number">
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Amenities:</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="wifi" name="amenities[]"
+                                    value="Wifi">
+                                <label class="form-check-label" for="wifi">Wifi</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="parking" name="amenities[]"
+                                    value="Parking">
+                                <label class="form-check-label" for="parking">Parking</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="tv" name="amenities[]" value="TV">
+                                <label class="form-check-label" for="tv">TV</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="ac" name="amenities[]"
+                                    value="Air Conditioning">
+                                <label class="form-check-label" for="ac">Air Conditioning</label>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="additional_details" class="form-label">Additional Details:</label>
+                            <textarea class="form-control" id="additional_details" name="additional_details"
+                                rows="4"></textarea>
+                        </div>
+
+                        <div id="photoInputs">
+                            <div class="mb-3 mt-2">
+                                <label for="photo_upload" class="form-label">Photo Upload:</label>
+                                <input type="file" class="form-control" name="photo_upload[]" accept="image/*" multiple>
+                                <button type="button" class="btn btn-secondary mt-2" onclick="addPhotoInput()">Add More
+                                    Photos</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 mt-3">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button class="btn btn-danger" type="button"
+                                onclick="toggleCollapse('collapseWidthExample')">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-danger" id="logoutBtn" type="button">Log Out</button>
-            </div>
-            <div class="mb-3">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" href="#collapseWidthExample"
-                    role="button" aria-expanded="false" aria-controls="collapseExample">
-                    Create Rooms
-                </button>
-            </div>
+        </div>
+
+        <div class="row" id="cardContainer">
+        
+
+        </div>
 
 
-            <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapseWidthExample">
-                    <div class="card card-body">
-                        <!-- Form for room management -->
-                        <form id="roomForm" method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <label for="property_name" class="form-label">Property Name:</label>
-                                <input type="text" class="form-control" id="property_name" name="property_name">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="room_name_number" class="form-label">Room Number:</label>
-                                <input type="text" class="form-control" id="room_number" name="room_number">
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label for="room_type" class="form-label">Room Type:</label>
-                                <select class="form-select" id="room_type" name="room_type">
-                                    <option value="single">Single Room</option>
-                                    <option value="double">Double Room</option>
-                                    <option value="suite">Suite</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="num_of_beds" class="form-label">Number of Beds:</label>
-                                <input type="number" class="form-control" id="num_of_beds" name="num_of_beds">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="floor_size" class="form-label">Floor Size (in square feet):</label>
-                                <input type="number" class="form-control" id="floor_size" name="floor_size">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="min_booking_period" class="form-label">Min Booking Period:</label>
-                                <input type="number" class="form-control" id="min_booking_period" name="min_booking_period">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="max_booking_period" class="form-label">Max Booking Period:</label>
-                                <input type="number" class="form-control" id="max_booking_period" name="max_booking_period">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="rent_per_day" class="form-label">Rent per Day:</label>
-                                <input type="number" class="form-control" id="rent_per_day" name="rent_per_day">
-                            </div>
-
-
-
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Address:</label>
-                                <input type="text" class="form-control" id="address" name="address">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="city" class="form-label">City:</label>
-                                <input type="text" class="form-control" id="city" name="city">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="country" class="form-label">Country:</label>
-                                <input type="text" class="form-control" id="country" name="country">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="contact_name" class="form-label">Contact Name:</label>
-                                <input type="text" class="form-control" id="contact_name" name="contact_name">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="contact_email" class="form-label">Contact Email:</label>
-                                <input type="email" class="form-control" id="contact_email" name="contact_email">
-                            </div>
-
-                            <div class="mb-3 input-group">
-                                <select class="form-select country-code-select" style="width: auto;">
-                                    <option value="+1">+1 (USA)</option>
-                                    <option value="+44">+44 (UK)</option>
-                                    <option value="+91">+91 (India)</option>
-                                </select>
-                                <input type="tel" class="form-control" id="contact_phone" name="contact_phone"
-                                    placeholder="Phone Number">
-                            </div>
-
-
-
-                            <div class="mb-3">
-                                <label class="form-label">Amenities:</label><br>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="wifi" name="amenities[]"
-                                        value="Wifi">
-                                    <label class="form-check-label" for="wifi">Wifi</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="parking" name="amenities[]"
-                                        value="Parking">
-                                    <label class="form-check-label" for="parking">Parking</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="tv" name="amenities[]" value="TV">
-                                    <label class="form-check-label" for="tv">TV</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="ac" name="amenities[]"
-                                        value="Air Conditioning">
-                                    <label class="form-check-label" for="ac">Air Conditioning</label>
-                                </div>
-
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="additional_details" class="form-label">Additional Details:</label>
-                                <textarea class="form-control" id="additional_details" name="additional_details"
-                                    rows="4"></textarea>
-                            </div>
-
-                            <div id="photoInputs">
-                                <div class="mb-3 mt-2">
-                                    <label for="photo_upload" class="form-label">Photo Upload:</label>
-                                    <input type="file" class="form-control" name="photo_upload[]" accept="image/*" multiple>
-                                    <button type="button" class="btn btn-secondary mt-2" onclick="addPhotoInput()">Add More
-                                        Photos</button>
-                                </div>
-                            </div>
-
-                            <div class="mb-3 mt-3">
-                                <button type="submit" class="btn btn-success">Submit</button>
-                                <button class="btn btn-danger" type="button"
-                                    onclick="toggleCollapse('collapseWidthExample')">Cancel</button>
-                            </div>
-                        </form>
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Room Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form for editing room details -->
+                        <!-- Include form elements with appropriate IDs -->
+                        <!-- Example: <input type="text" class="form-control" id="edited_property_name" name="edited_property_name"> -->
+                        <!-- ... add other form elements ... -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
                     </div>
                 </div>
             </div>
-
-            <div class="row" id="cardContainer">
-
-            </div>
+        </div>
+    
 
 
-            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-          
-          
-            </div>
-            
 
-    </body>
+     
 
-    </html>     
+
+</body>
+
+</html>

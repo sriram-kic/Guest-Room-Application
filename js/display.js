@@ -8,8 +8,6 @@ $(document).ready(function () {
                 <div class="col-lg-6 mb-4">
                     <div class="card h-10">
                         <div class="row g-0">
-                        <0div.class="col-lg-6">
-                        </div>
                             <div class="col-md-6">
                                 <div id="carouselExampleControls_${room.id}" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
@@ -62,23 +60,6 @@ $(document).ready(function () {
         });
     }
 
-    // Function to handle editing a room
-    function editRoom(roomId) {
-        // You can implement this function to open the edit modal and populate it with current details
-        // For simplicity, let's assume you have an editModalContent function
-        let modalContent = getEditModalContent(roomId);
-        $('#editModal .modal-body').html(modalContent);
-
-        // Show the edit modal
-        $('#editModal').modal('show');
-    }
-
-    // Event listener for the "Edit" button on room cards
-    $('#cardContainer').on('click', '.btn-success', function () {
-        let roomId = $(this).data('room-id');
-        editRoom(roomId);
-    });
-
     // Fetch room data on initial page load
     function refreshTable() {
         $.ajax({
@@ -93,53 +74,48 @@ $(document).ready(function () {
             }
         });
     }
+
+    // Call refreshTable on document ready
     refreshTable();
 
-    // Example: Function to fetch edit modal content based on room ID
-    function getEditModalContent(roomId) {
-        // You need to implement this function to retrieve current details for editing
-        // For demonstration, let's assume you have a PHP script to fetch room details by ID
-        let modalContent = '';
+    // Event listener for modal show event
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var roomId = button.data('room-id'); // Extract room ID from data attribute
+
+        // Fetch room data using AJAX
         $.ajax({
-            url: 'php/fetch_room_details.php',
-            type: 'GET',
+            url: 'update_room.php',
+            method: 'GET',
             data: { room_id: roomId },
             dataType: 'json',
-            async: false, // Ensure synchronous execution
             success: function (response) {
-                modalContent = response.modal_content;
+                if (response.success) {
+                    // Populate modal fields with the fetched data
+                    populateModalFields(response.data);
+                    // Store room ID in the modal for reference
+                    $('#editModal').data('room-id', roomId);
+                } else {
+                    console.error('Error fetching room data:', response.error);
+                }
             },
-            error: function (xhr, textStatus, errorThrown) {
-                console.error('Error fetching room details:', errorThrown);
-            }
-        });
-        return modalContent;
-    }
-});
-
-
-    
-    $(document).on('click', '.btn-danger', function () {
-        let roomId = $(this).data('room-id');
-
-        $.ajax({
-            type: 'POST',
-            url: 'php/delete_room.php',
-            data: { roomId: roomId },
-            success: function (response) {
-                console.log('Room deleted successfully.');
-                refreshTable();
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.error('Error deleting room:', errorThrown);
+            error: function (error) {
+                console.error('Error fetching room data:', error);
             }
         });
     });
 
+    // Event listener for Save Changes button
+    $('#saveChangesBtn').click(function () {
+        // Implement your logic to save changes here
+        // You may want to use AJAX to send updated data to the server
+        // and update the database.
+    });
 
+    // Your existing code for inserting new room
     $(document).on('submit', '#roomForm', function (event) {
         event.preventDefault();
-    
+
         var formData = new FormData($(this)[0]);
         $.ajax({
             type: 'POST',
@@ -158,4 +134,27 @@ $(document).ready(function () {
             }
         });
     });
-    
+
+    // Your existing code for deleting a room
+    $(document).on('click', '.btn-danger', function () {
+        let roomId = $(this).data('room-id');
+
+        $.ajax({
+            type: 'POST',
+            url: 'php/delete_room.php',
+            data: { roomId: roomId },
+            success: function (response) {
+                console.log('Room deleted successfully.');
+                refreshTable();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error('Error deleting room:', errorThrown);
+            }
+        });
+    });
+
+    // Your existing code for modal population
+    function populateModalFields(roomData) {
+        // Implement your logic to populate modal fields
+    }
+});

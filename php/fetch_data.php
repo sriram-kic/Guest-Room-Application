@@ -2,9 +2,12 @@
 // Include your database configuration file
 include "config.php";
 
+
 // Fetch data from the database
 $query = "SELECT * FROM rooms";
 $result = $db->query($query);
+
+
 $data = array();
 
 if ($result->num_rows > 0) {
@@ -22,4 +25,3 @@ echo json_encode(array('data' => $data));
 // Close the database connection
 $db->close();
 ?>
-
