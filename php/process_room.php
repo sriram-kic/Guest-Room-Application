@@ -1,5 +1,6 @@
 <?php
 include "connect.php";
+include "session.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $property_name = $_POST["property_name"];
@@ -19,7 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $amenities = implode(", ", $_POST["amenities"]);
     $additional_details = $_POST["additional_details"];
     $target_dir = "../uploads/";
-    $uploaded_files = [];
+
+    $uploaded_files = [];  // Initialize the array here
+
     foreach ($_FILES["photo_upload"]["name"] as $index => $file_name) {
         $target_file = $target_dir . basename($file_name);
 
@@ -33,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $photo_paths = implode(",", $uploaded_files);
 
-    $stmt = $db->prepare("INSERT INTO rooms (property_name,room_number, room_type, num_of_beds, floor_size_sqft, min_booking_period, max_booking_period, rent_per_day, address, city, country, contact_name, contact_email, contact_phone, amenities, additional_details, photo_paths) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO rooms (user_id, property_name, room_number, room_type, num_of_beds, floor_size_sqft, min_booking_period, max_booking_period, rent_per_day, address, city, country, contact_name, contact_email, contact_phone, amenities, additional_details, photo_paths) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("sssssssssssssssss", $property_name,$room_number, $room_type, $num_of_beds, $floor_size_sqft, $min_booking_period, $max_booking_period, $rent_per_day, $address, $city, $country, $contact_name, $contact_email, $contact_phone, $amenities, $additional_details, $photo_paths);
+    $stmt->bind_param("ssssssssssssssssss", $_SESSION['login_user'], $property_name, $room_number, $room_type, $num_of_beds, $floor_size_sqft, $min_booking_period, $max_booking_period, $rent_per_day, $address, $city, $country, $contact_name, $contact_email, $contact_phone, $amenities, $additional_details, $photo_paths);
 
     if ($stmt->execute()) {
         echo "Room added successfully!";

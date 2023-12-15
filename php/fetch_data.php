@@ -1,12 +1,15 @@
 <?php
 // Include your database configuration file
 include "connect.php";
+include "session.php";
 
 
-// Fetch data from the database
-$query = "SELECT * FROM rooms";
-$result = $db->query($query);
-
+$id = $_SESSION['login_user'];
+$query = "SELECT * FROM rooms WHERE user_id = ?";
+$stmt = $db->prepare($query);
+$stmt->bind_param("s", $id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $data = array();
 
@@ -23,5 +26,6 @@ header('Content-Type: application/json');
 echo json_encode(array('data' => $data));
 
 // Close the database connection
+$stmt->close();
 $db->close();
 ?>

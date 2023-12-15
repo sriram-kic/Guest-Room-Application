@@ -15,10 +15,12 @@ $(document).on('submit', '#login', function(e) {
             if (res.status == 422 || res.status == 500) {
                 $('#loginerrorMessage').removeClass('d-none').text(res.message);
             } else if (res.status == 300) {
-                Swal.fire(
-                    'Login successfully',
-                    'success'
-                ).then((result) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login successfully',
+                    text: 'success'
+                })
+                .then((result) => {
                     if (result.isConfirmed) {
                         if (res.user_role === 'OWNER') {
                             window.location.href = "rooms.php";
@@ -27,7 +29,7 @@ $(document).on('submit', '#login', function(e) {
                             window.location.href = "customer.html";
                         } 
                        else {
-                            window.location.href = "register.html";
+                            window.location.href = "index.php";
                         } 
                     }
                 });

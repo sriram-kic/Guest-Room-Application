@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2023 at 05:50 PM
+-- Generation Time: Dec 15, 2023 at 04:26 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,33 +29,33 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `rooms` (
   `id` int(11) NOT NULL,
-  `room_name_number` varchar(100) NOT NULL,
-  `room_type` varchar(50) DEFAULT NULL,
-  `num_of_beds` int(11) DEFAULT NULL,
-  `floor_size_sqft` int(11) DEFAULT NULL,
-  `min_booking_period` int(11) DEFAULT NULL,
-  `max_booking_period` int(11) DEFAULT NULL,
-  `rent_per_day` decimal(10,2) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `country` varchar(100) DEFAULT NULL,
-  `contact_name` varchar(100) DEFAULT NULL,
-  `contact_email` varchar(100) DEFAULT NULL,
-  `contact_phone` varchar(20) DEFAULT NULL,
-  `amenities` varchar(255) DEFAULT NULL,
-  `additional_details` text DEFAULT NULL,
-  `photo_paths` varchar(255) DEFAULT NULL
+  `user_id` int(11) NOT NULL,
+  `property_name` varchar(255) NOT NULL,
+  `room_number` varchar(255) NOT NULL,
+  `room_type` varchar(255) NOT NULL,
+  `num_of_beds` int(11) NOT NULL,
+  `floor_size_sqft` int(11) NOT NULL,
+  `min_booking_period` int(11) NOT NULL,
+  `max_booking_period` int(11) NOT NULL,
+  `rent_per_day` int(11) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `contact_name` varchar(255) NOT NULL,
+  `contact_email` varchar(255) NOT NULL,
+  `contact_phone` varchar(255) NOT NULL,
+  `amenities` varchar(255) NOT NULL,
+  `additional_details` text NOT NULL,
+  `photo_paths` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `room_name_number`, `room_type`, `num_of_beds`, `floor_size_sqft`, `min_booking_period`, `max_booking_period`, `rent_per_day`, `address`, `city`, `country`, `contact_name`, `contact_email`, `contact_phone`, `amenities`, `additional_details`, `photo_paths`) VALUES
-(10, 'Hai & 12', 'single', 1, 123, 1, 15, 100.00, 'ds', 'Tiruchirappalli', 'India', 'Nithish G', 'gknithish05@gmail.com', '07904538994', 'Wifi, Parking, Air Conditioning', 'asdfasdfsad', 'uploads/1324832.png'),
-(11, 'Hai & 12', 'single', 1, 123, 1, 15, 100.00, 'ds', 'Tiruchirappalli', 'India', 'Nithish G', 'gknithish05@gmail.com', '07904538994', 'Wifi, Parking, Air Conditioning', 'sadfasd', 'uploads/1324832.png'),
-(12, 'Hai & 12', 'single', 1, 123, 1, 15, 100.00, 'ds', 'Tiruchirappalli', 'India', 'Nithish G', 'gknithish05@gmail.com', '07904538994', 'Parking, TV', 'asdfas', 'uploads/1324832.png,uploads/NITHISH IDs photo.jpg,uploads/SKILLRACK SQL certificate.png'),
-(13, 'Hai & 12', 'single', 1, 123, 1, 15, 100.00, 'ds', 'Tiruchirappalli', 'India', 'Nithish G', 'gknithish05@gmail.com', '7904538994', 'Wifi, Parking, Air Conditioning', 'dsfsafa', 'uploads/1324832.png,uploads/NITHISH IDs photo.jpg,uploads/SKILLRACK SQL certificate.png');
+INSERT INTO `rooms` (`id`, `user_id`, `property_name`, `room_number`, `room_type`, `num_of_beds`, `floor_size_sqft`, `min_booking_period`, `max_booking_period`, `rent_per_day`, `address`, `city`, `country`, `contact_name`, `contact_email`, `contact_phone`, `amenities`, `additional_details`, `photo_paths`) VALUES
+(8, 7, 'Gokulam', '15', 'single', 10, 13000, 1, 30, 200, 'main road', 'chennai', 'India', 'Hai', 'a@gmail.com', '09943576618', 'Parking, TV, Air Conditioning', 'sdfadsf', '../uploads/OIP (1).jpeg,../uploads/OIP.jpeg'),
+(16, 6, 'Gokulam', '1', 'single', 0, 12, 1, 12, 200, 'a@gmail.com', 'karur', 'India', 'Manish', 'a@gmail.com', '6568989897', 'ewrewqr', 'asdfsadfdsa', '../uploads/New-image.png,../uploads/OIP.jpeg');
 
 -- --------------------------------------------------------
 
@@ -68,16 +68,18 @@ CREATE TABLE `users` (
   `email` varchar(20) NOT NULL,
   `pass` varchar(20) NOT NULL,
   `contact` int(15) NOT NULL,
-  `role` varchar(15) NOT NULL
+  `role` varchar(15) NOT NULL,
+  `password_reset_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `pass`, `contact`, `role`) VALUES
-(5, 'abc@gmail.com', '123', 123, 'CUSTOMER'),
-(6, 'tamil@gmail.com', '123', 9846555, 'OWNER');
+INSERT INTO `users` (`id`, `email`, `pass`, `contact`, `role`, `password_reset_token`) VALUES
+(5, 'abc@gmail.com', '123', 123, 'CUSTOMER', '2023-12-16 16:02:45'),
+(6, 'tamil@gmail.com', '123', 9846555, 'OWNER', NULL),
+(7, 'surusri8@gmail.com', '123', 123456789, 'OWNER', NULL);
 
 --
 -- Indexes for dumped tables
@@ -87,7 +89,8 @@ INSERT INTO `users` (`id`, `email`, `pass`, `contact`, `role`) VALUES
 -- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -103,13 +106,23 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `rooms`
+--
+ALTER TABLE `rooms`
+  ADD CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

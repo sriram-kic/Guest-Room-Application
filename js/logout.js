@@ -4,10 +4,10 @@ $(document).ready(function() {
             url: 'php/logout.php',
             type: 'POST',
             data: { action: 'logout' }, 
-            dataType: 'json', // Specify that the expected response is JSON
+            dataType: 'json', 
             success: function(response) {
-                if (response.status === 'success') { // Check response.status
-                    window.location.href = 'register.html';
+                if (response.status === 'success') { 
+                    window.location.href = 'index.php';
                 } else {
                     console.log('Logout failed');
                 }

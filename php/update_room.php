@@ -1,58 +1,81 @@
 <?php
-include("connect.php");
+include 'connect.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve the room ID from the POST data
-    $roomId = $_POST['room_id'];
+// Check if room_id and updated_data are set in the POST request
+if (isset($_POST['room_id']) && isset($_POST['updated_data'])) {
+    $room_id = $_POST['room_id'];
+    $updated_data = $_POST['updated_data'];
 
-    // Retrieve other fields from the POST data
-    $property_name = $_POST['property_name'];
-    $room_number = $_POST['room_number'];
-    $room_type = $_POST['room_type'];
-    $num_of_beds = $_POST['num_of_beds'];
-    $floor_size_sqft = $_POST['floor_size_sqft'];
-    $min_booking_period = $_POST['min_booking_period'];
-    $max_booking_period = $_POST['max_booking_period'];
-    $rent_per_day = $_POST['rent_per_day'];
-    $address = $_POST['address'];
-    $city = $_POST['city'];
-    $country = $_POST['country'];
-    $contact_name = $_POST['contact_name'];
-    $contact_email = $_POST['contact_email'];
-    $contact_phone = $_POST['contact_phone'];
-    $amenities = implode(', ', $_POST['amenities']); // Convert array to string
-    $additional_details = $_POST['additional_details'];
+    // Use prepared statements to prevent SQL injection
+    $query = "UPDATE rooms SET
+                property_name = ?,
+                room_number = ?,
+                room_type = ?,
+                num_of_beds = ?,
+                floor_size_sqft = ?,
+                min_booking_period = ?,
+                max_booking_period = ?,
+                rent_per_day = ?,
+                address = ?,
+                city = ?,
+                country = ?,
+                contact_name = ?,
+                contact_email = ?,
+                contact_phone = ?,
+                additional_details = ?
+            WHERE id = ?";
 
-    // Update the room details in the database
-    $sql = "UPDATE rooms SET 
-            property_name = '$property_name',
-            room_number = '$room_number',
-            room_type = '$room_type',
-            num_of_beds = '$num_of_beds',
-            floor_size_sqft = '$floor_size_sqft',
-            min_booking_period = '$min_booking_period',
-            max_booking_period = '$max_booking_period',
-            rent_per_day = '$rent_per_day',
-            address = '$address',
-            city = '$city',
-            country = '$country',
-            contact_name = '$contact_name',
-            contact_email = '$contact_email',
-            contact_phone = '$contact_phone',
-            amenities = '$amenities',
-            additional_details = '$additional_details'
-            WHERE id = $roomId"; // Update this query based on your actual table structure
+    $stmt = $db->prepare($query);
+    if ($stmt === false) {
+        $response['success'] = false;
+        $response['error'] = $db->error;
+        echo json_encode($response);
+        exit;
+    }
+    $stmt->bind_param(
+        'ssssssssssssssss', // Update format string if needed
+        $updated_data['property_name'],
+        $updated_data['room_number'],
+        $updated_data['room_type'],
+        $updated_data['num_of_beds'],
+        $updated_data['floor_size_sqft'], 
+        $updated_data['min_booking_period'],
+        $updated_data['max_booking_period'],
+        $updated_data['rent_per_day'],
+        $updated_data['address'],
+        $updated_data['city'],
+        $updated_data['country'],
+        $updated_data['contact_name'],
+        $updated_data['contact_email'],
+        $updated_data['contact_phone'],
+        $updated_data['additional_details'],
+        $room_id
+    );
+    
 
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['success' => true]);
+    // Execute the update query
+    $result = $stmt->execute();
+
+    // Check if the query was successful
+    if ($result) {
+        $response['success'] = true;
     } else {
-        echo json_encode(['success' => false, 'error' => $conn->error]);
+        $response['success'] = false;
+        $response['error'] = $stmt->error;
     }
 
+    // Close the statement
+    $stmt->close();
+
     // Close the database connection
-    $conn->close();
+    $db->close();
+
+    // Return the response as JSON
+    echo json_encode($response);
 } else {
-    // Invalid request method
-    echo json_encode(['success' => false, 'error' => 'Invalid request method']);
+    // If room_id or updated_data is not set, return an error response
+    $response['success'] = false;
+    $response['error'] = 'Invalid request parameters';
+    echo json_encode($response);
 }
 ?>

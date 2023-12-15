@@ -5,7 +5,7 @@ $(document).on('submit', '#ownerSignupForm', function(e) {
     formData.append("ownerSignupForm", true);
     $.ajax({
         type: "POST",
-        url: "php/register.html",
+        url: "php/register.php",
         data: formData,
         processData: false,
         contentType: false,
@@ -24,7 +24,7 @@ $(document).on('submit', '#ownerSignupForm', function(e) {
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed || result.isDismissed) {
-                        window.location.href = "register.html";
+                        window.location.href = "index.php";
                     }
                 });
             } else if (res.status == 500) {
@@ -48,7 +48,7 @@ $(document).on('submit', '#customerSignupForm', function(e) {
     formData.append("customerSignupForm", true);
     $.ajax({
         type: "POST",
-        url: "php/register.html",
+        url: "php/register.php",
         data: formData,
         processData: false,
         contentType: false,
@@ -67,7 +67,7 @@ $(document).on('submit', '#customerSignupForm', function(e) {
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed || result.isDismissed) {
-                        window.location.href = "register.html";
+                        window.location.href = "index.php";
                     }
                 });
             } else if (res.status == 500) {

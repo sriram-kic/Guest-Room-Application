@@ -4,19 +4,22 @@ $(document).ready(function () {
         $('#cardContainer').empty();
 
         data.forEach(function (room) {
-            let cardHtml = `
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-10">
+            console.log('Room data:', room);
+            let cardHtml = `<div class="col-lg-6 mb-4">
+                    <div class="card">
                         <div class="row g-0">
                             <div class="col-md-6">
                                 <div id="carouselExampleControls_${room.id}" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        ${room.photo_paths.split(',').map((photo, index) => `
-                                            <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                                                <img src="php/image.php?file=${encodeURIComponent(photo)}" class="d-block w-100" alt="Room Image">
-                                            </div>
-                                        `).join('')}
-                                    </div>
+                                <div class="carousel-inner w-100">
+                                <div class="row">
+                                    ${room.photo_paths.split(',').map((photo, index) => `
+                                        <div class="col carousel-item ${index === 0 ? 'active' : ''}">
+                                            <img src="php/image.php?file=${encodeURIComponent(photo)}" class="d-block w-100" alt="Room Image" style="object-fit: fill; width:100%; height:500px">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
                                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_${room.id}" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Previous</span>
@@ -35,7 +38,6 @@ $(document).ready(function () {
                                             <h5 class="card-title">${room.room_number}</h5>
                                             <p class="card-text">Room Type: ${room.room_type}</p>
                                             <p class="card-text">Number of Beds: ${room.num_of_beds}</p>
-                                            <p class="card-text">Amenities: ${room.amenities}</p>
                                         </div>
                                         <div class="text-end">
                                             <p class="card-text fs-3 text-success">${room.rent_per_day}</p>
@@ -46,10 +48,11 @@ $(document).ready(function () {
                                     <p class="card-text">Max Booking Period: ${room.max_booking_period}</p>
                                     <p class="card-text">Address: ${room.address}, ${room.city}, ${room.country}</p>
                                     <p class="card-text">Contact: ${room.contact_name}, ${room.contact_email}, ${room.contact_phone}</p>
+                                    <p class="card-text">Amenities: ${room.amenities}</p>
                                     <p class="card-text">Additional Details: ${room.additional_details}</p>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModal" data-room-id="${room.id}">Edit</button>
-                                        <button type="button" class="btn btn-danger" data-room-id="${room.id}">Remove</button>
+                                    <button type="button" class="btn btn-sm btn-primary btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-room-id="${room.id}">Edit</button>    
+                                        <button type="button" class="btn  btn-sm btn-danger" data-room-id="${room.id}">Remove</button>
                                     </div>
                                 </div>
                             </div>
@@ -62,56 +65,23 @@ $(document).ready(function () {
 
     // Fetch room data on initial page load
     function refreshTable() {
-        $.ajax({
+        return $.ajax({
             url: "php/fetch_data.php",
             type: "GET",
             dataType: "json",
-            success: function (response) {
-                refreshCards(response.data);
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.error('Error fetching data:', errorThrown);
-            }
-        });
-    }
+        success: function (response) {
+            refreshCards(response.data);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.error('Error fetching data:', errorThrown);
+        }
+    });
+}
 
     // Call refreshTable on document ready
     refreshTable();
 
-    // Event listener for modal show event
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var roomId = button.data('room-id'); // Extract room ID from data attribute
-
-        // Fetch room data using AJAX
-        $.ajax({
-            url: 'update_room.php',
-            method: 'GET',
-            data: { room_id: roomId },
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    // Populate modal fields with the fetched data
-                    populateModalFields(response.data);
-                    // Store room ID in the modal for reference
-                    $('#editModal').data('room-id', roomId);
-                } else {
-                    console.error('Error fetching room data:', response.error);
-                }
-            },
-            error: function (error) {
-                console.error('Error fetching room data:', error);
-            }
-        });
-    });
-
-    // Event listener for Save Changes button
-    $('#saveChangesBtn').click(function () {
-        // Implement your logic to save changes here
-        // You may want to use AJAX to send updated data to the server
-        // and update the database.
-    });
-
+   
     // Your existing code for inserting new room
     $(document).on('submit', '#roomForm', function (event) {
         event.preventDefault();
@@ -127,7 +97,8 @@ $(document).ready(function () {
             success: function (response) {
                 $('#roomForm')[0].reset();
                 refreshTable();
-                alertify.success('Data inserted successfully!');
+                alertify.success('Data inserted successfully!', 'success', 3);
+
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.error('Error inserting data:', errorThrown);
@@ -146,6 +117,8 @@ $(document).ready(function () {
             success: function (response) {
                 console.log('Room deleted successfully.');
                 refreshTable();
+                alertify.success('Room deleted successfully!', 'success', 3);
+
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.error('Error deleting room:', errorThrown);
@@ -153,8 +126,8 @@ $(document).ready(function () {
         });
     });
 
-    // Your existing code for modal population
-    function populateModalFields(roomData) {
-        // Implement your logic to populate modal fields
-    }
+
+
 });
+
+

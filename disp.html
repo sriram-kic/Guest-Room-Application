@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Listing</title>
+    <!-- Include Pikaday library -->
+    <link rel="stylesheet" href="path/to/pikaday.css">
+    <!-- Include Pikaday library using CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/pikaday.min.js"></script>
+
+    <script src="path/to/pikaday.js"></script>
+    <style>
+        .room-card {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            width: 300px;
+        }
+
+        .booking-form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="roomList"></div>
+
+    <script src="path/to/datepicker.js"></script>
+    <script>
+        // ... Your existing JavaScript code ...
+
+        function showBookingForm(roomId) {
+            const bookingForm = document.createElement('div');
+            bookingForm.className = 'booking-form';
+            bookingForm.innerHTML = `
+                <label for="checkInDate">Check-In Date:</label>
+                <input type="text" id="checkInDate" readonly>
+                <label for="checkOutDate">Check-Out Date:</label>
+                <input type="text" id="checkOutDate" readonly>
+                <label for="guestName">Guest Name:</label>
+                <input type="text" id="guestName" required>
+                <label for="guestEmail">Guest Email:</label>
+                <input type="email" id="guestEmail" required>
+                <button onclick="bookRoom('${roomId}')">Book Now</button>
+            `;
+
+            roomListDiv.innerHTML = ''; // Clear room list
+            roomListDiv.appendChild(bookingForm);
+
+            // Initialize Pikaday datepickers
+            const checkInDatePicker = new Pikaday({
+                field: document.getElementById('checkInDate'),
+                format: 'MM/DD/YYYY',
+                onSelect: function () {
+                    // Handle date selection if needed
+                }
+            });
+
+            const checkOutDatePicker = new Pikaday({
+                field: document.getElementById('checkOutDate'),
+                format: 'MM/DD/YYYY',
+                onSelect: function () {
+                    // Handle date selection if needed
+                }
+            });
+
+            // You may need to implement logic to handle availability based on selected dates
+        }
+
+        function bookRoom(roomId) {
+            const checkInDate = document.getElementById('checkInDate').value;
+            const checkOutDate = document.getElementById('checkOutDate').value;
+            const guestName = document.getElementById('guestName').value;
+            const guestEmail = document.getElementById('guestEmail').value;
+
+            // Validate dates and other inputs as needed
+
+            // Send booking details to the backend for processing
+            fetch('php/cust_book_room.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    roomId: roomId,
+                    checkInDate: checkInDate,
+                    checkOutDate: checkOutDate,
+                    guestName: guestName,
+                    guestEmail: guestEmail,
+                }),
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    alert('Booking successful!');
+                } else {
+                    alert('Booking failed. Please try again.');
+                }
+            })
+            .catch(error => console.error('Error booking room:', error));
+        }
+    </script>
+</body>
+</html>

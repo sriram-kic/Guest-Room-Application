@@ -8,6 +8,7 @@ $(document).on('click', '.btn-danger', function () {
         success: function (response) {
             console.log('Room deleted successfully.');
             refreshTable();
+            
         },
         error: function (xhr, textStatus, errorThrown) {
             console.error('Error deleting room:', errorThrown);

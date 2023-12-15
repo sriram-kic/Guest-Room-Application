@@ -2,19 +2,12 @@
 <?php
 include "connect.php";
 session_start();
-
-// If the user is not logged in, redirect to the login page
-if (!isset($_SESSION['login'])) {
-    header('Location: register.html');
+if (!isset($_SESSION['loggedin'])) {
+    header('Location: index.php'); 
     exit();
-} else {
-    // User is logged in, retrieve user information
-    $id = $_SESSION['id']; // User ID
-    $role = $_SESSION['role']; // User's role
-}
-
-function isUserLoggedIn($userId) {
-    // Check if the provided user ID matches the logged-in user ID
-    return isset($_SESSION['login']) && $_SESSION['id'] == $userId;
+} else{
+    $id = $_SESSION['login_user']; 
+    $role = $_SESSION['user_role']; 
+// echo "Logged-in User ID: " . $id. "role is:" .$role;
 }
 ?>
