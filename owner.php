@@ -2,17 +2,16 @@
 <?php
 include "php/connect.php";
 include "php/session.php";
-
 // Get the logged-in user ID
 $logged_user_id = $_SESSION['login_user'];
 
-// Fetch booking history for the logged-in user
-$query = "SELECT * FROM bookings WHERE user_id = ?";
+// Fetch booked history for the logged-in user
+$query = "SELECT * FROM bookings WHERE owner_id = ?";
 $stmt = $db->prepare($query);
 $stmt->bind_param("i", $logged_user_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$booking_history = $result->fetch_all(MYSQLI_ASSOC);
+$booked_history = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 $db->close();
 ?>
@@ -164,6 +163,7 @@ margin-bottom: 20px;
 </main>
 
 
+
 <!-- Booking History Modal with Room Details -->
 <div class="modal fade" id="bookingHistoryModal" tabindex="-1" aria-labelledby="bookingHistoryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -174,38 +174,86 @@ margin-bottom: 20px;
       </div>
       <div class="modal-body">
         <!-- DataTable to Display Booking History with Room Details -->
-        <table id="bookingHistoryTable" class="table">
-          <thead>
+
+        <style>
+    /* Custom styles for the modal and DataTable */
+    #bookingHistoryTable {
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    }
+
+    #bookingHistoryTable .modal-content {
+        background-color: #fff; /* White background */
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for a subtle lift */
+    }
+
+    #bookingHistoryTable {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #bookingHistoryTable th, #bookingHistoryTable td {
+        border: 1px solid #ddd; /* Border between cells */
+        padding: 8px;
+        text-align: left;
+    }
+
+    #bookingHistoryTable th {
+        background-color: #3498db; /* Blue background for header cells */
+        color: #fff; /* White text color */
+    }
+
+    #bookingHistoryTable tbody tr:hover {
+        background-color: #f5f5f5; /* Light gray background on hover */
+    }
+
+    #bookingHistoryTable .status-booked {
+        color: #27ae60; /* Green color for 'booked' status */
+        font-weight: bold;
+    }
+
+    #bookingHistoryTable .modal-footer {
+        border-top: 1px solid #ddd; /* Border above the modal footer */
+    }
+
+    #bookingHistoryTable .modal-footer button {
+        background-color: #3498db; /* Blue background for buttons */
+        color: #fff; /* White text color */
+    }
+</style>
+
+<!-- Your table code -->
+<table id="bookingHistoryTable" class="table">
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Room Number</th>
+            <th>Check-in Date</th>
+            <th>Check-out Date</th>
+            <th>Customer Name</th>
+            <th>Customer Email</th>
+            <th>Customer Mobile Number</th>
+            <th>Booking Date & Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($booked_history as $booking) : ?>
             <tr>
-              <th>Booking ID</th>
-              <th>Room Number</th>
-              <th>Check-in Date</th>
-              <th>Check-out Date</th>
-              <th>Guest Name</th>
-              <!-- Add more columns as needed from rooms_table -->
-              <th>Room Type</th>
-              <th>Floor Size</th>
-              <!-- Add more columns as needed from rooms_table -->
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($booking_history as $booking) : ?>
-              <tr>
                 <td><?= $booking['booking_id']; ?></td>
                 <td><?= $booking['room_number']; ?></td>
                 <td><?= $booking['checkin_date']; ?></td>
                 <td><?= $booking['checkout_date']; ?></td>
-                <td><?= $booking['guest_name']; ?></td>
-                <!-- Retrieve additional details from rooms_table -->
-                <td><?= $booking['room_type']; ?></td>
-                <td><?= $booking['floor_size']; ?></td>
-                <!-- Retrieve additional details from rooms_table -->
-                <td><?= $booking['status']; ?></td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+                <td><?= $booking['customer_name']; ?></td>
+                <td><?= $booking['customer_email']; ?></td>
+                <td><?= $booking['customer_phone']; ?></td>
+                <td><?= $booking['booking_date']; ?></td>
+                <td class="<?= $booking['status'] === 'booked' ? 'status-booked' : ''; ?>"><?= $booking['status']; ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -470,7 +518,7 @@ margin-bottom: 20px;
             if (response.success) {
                 // Populate modal fields with the fetched data
                 populateModalFields(response.data);
-                // Show the modal
+                $("#bookedHistoryTable").load(" #bookedHistoryTable > *");
                 $('#editModal').modal('show');
             } else {
                 console.error('Error fetching room data:', response.error);
@@ -518,7 +566,8 @@ $('#saveChangesBtn').click(function () {
         success: function (response) {
             if (response.success) {
                 $('#editModal').modal('hide');
-                location.reload("rooms.php");
+                $("#bookedHistoryTable").load(" #bookedHistoryTable > *");
+                location.reload("owner.php");
                 alertify.success('Changes saved successfully!');
             } else {
                 console.error('Error saving changes:', response.error);

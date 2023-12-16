@@ -389,6 +389,7 @@ $('#bookingForm').submit(function (e) {
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Optionally, you can redirect or perform other actions here
+                            $("#bookedHistoryTable").load(" #bookedHistoryTable > *");
                             $('#bookingModal').modal('hide');
                         }
                     });

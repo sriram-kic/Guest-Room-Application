@@ -1,5 +1,4 @@
 <?php
-
 include "connect.php";
 include "session.php";
 
@@ -16,46 +15,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $adults = $db->real_escape_string($_POST['adults']);
     $children = $db->real_escape_string($_POST['children']);
 
-    // Begin a transaction to ensure both insert and update are successful or none
-    $db->begin_transaction();
+    // Fetch user_id from rooms table
+    $fetchUserIdStmt = $db->prepare("SELECT user_id FROM rooms WHERE room_number = ?");
+    $fetchUserIdStmt->bind_param("s", $room_number);
 
-    try {
-        // Insert into bookings table
-        $stmt = $db->prepare("INSERT INTO bookings (user_id, room_number, checkin_date, checkout_date, adults, children, property_name, customer_name, customer_email, customer_phone, booking_date, status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'booked')");
+    if (!$fetchUserIdStmt->execute()) {
+        echo json_encode(['success' => false, 'message' => 'Error fetching user_id. Please try again.']);
+        exit;
+    }
 
-        $stmt->bind_param("ssssssssss", $user_id, $room_number, $checkin_date, $checkout_date, $adults, $children, $property_name, $customer_name, $customer_email, $customer_phone);
+    $fetchUserIdResult = $fetchUserIdStmt->get_result();
 
-        if (!$stmt->execute()) {
-            throw new Exception('Error inserting into bookings table');
+    if ($fetchUserIdResult->num_rows === 0) {
+        echo json_encode(['success' => false, 'message' => 'User not found for room number ' . $room_number]);
+        exit;
+    }
+
+    $fetchUserIdRow = $fetchUserIdResult->fetch_assoc();
+    $owner_id = $fetchUserIdRow['user_id'];
+
+    $fetchUserIdStmt->close();
+
+    // Insert into bookings table
+    $stmt = $db->prepare("INSERT INTO bookings (user_id, owner_id, room_number, checkin_date, checkout_date, adults, children, property_name, customer_name, customer_email, customer_phone, booking_date, status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'Booked')");
+
+    $stmt->bind_param("sssssssssss", $user_id, $owner_id, $room_number, $checkin_date, $checkout_date, $adults, $children, $property_name, $customer_name, $customer_email, $customer_phone);
+
+    if ($stmt->execute()) {
+        // Update status in the rooms table
+        $updateStatusStmt = $db->prepare("UPDATE rooms SET status = 'Booked' WHERE room_number = ?");
+        $updateStatusStmt->bind_param("s", $room_number);
+
+        if (!$updateStatusStmt->execute()) {
+            echo json_encode(['success' => false, 'message' => 'Error updating room status. Please try again.']);
+            exit;
         }
 
-        $stmt->close();
-
-        // Update the status in the rooms table
-        $updateStmt = $db->prepare("UPDATE rooms SET status = 'booked' WHERE room_number = ?");
-        $updateStmt->bind_param("s", $room_number);
-
-        if (!$updateStmt->execute()) {
-            throw new Exception('Error updating room status');
-        }
-
-        $updateStmt->close();
-
-        // Commit the transaction if everything is successful
-        $db->commit();
+        $updateStatusStmt->close();
 
         echo json_encode(['success' => true, 'message' => 'Booking submitted successfully']);
-    } catch (Exception $e) {
-        // Rollback the transaction if there is an error
-        $db->rollback();
-
+    } else {
         echo json_encode(['success' => false, 'message' => 'Error submitting booking. Please try again.']);
     }
 
+    $stmt->close();
     $db->close();
 } else {
     echo json_encode(['success' => false, 'message' => 'Form not submitted']);
 }
-
 ?>
