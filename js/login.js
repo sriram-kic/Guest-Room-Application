@@ -26,7 +26,7 @@ $(document).on('submit', '#login', function(e) {
                             window.location.href = "rooms.php";
                         } 
                         else if (res.user_role === 'CUSTOMER') {
-                            window.location.href = "customer.html";
+                            window.location.href = "customer.php";
                         } 
                        else {
                             window.location.href = "index.php";

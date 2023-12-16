@@ -69,19 +69,19 @@ $(document).ready(function () {
             url: "php/fetch_data.php",
             type: "GET",
             dataType: "json",
-        success: function (response) {
-            refreshCards(response.data);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            console.error('Error fetching data:', errorThrown);
-        }
-    });
-}
+            success: function (response) {
+                refreshCards(response.data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error('Error fetching data:', errorThrown);
+            }
+        });
+    }
 
     // Call refreshTable on document ready
     refreshTable();
 
-   
+
     // Your existing code for inserting new room
     $(document).on('submit', '#roomForm', function (event) {
         event.preventDefault();

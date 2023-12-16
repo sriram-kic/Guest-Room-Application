@@ -2,7 +2,7 @@
 include("connect.php");
 
 if (isset($_POST['ownerSignupForm']) || isset($_POST['customerSignupForm'])) {
-    include("config.php");
+    include("connect.php");
     $email = mysqli_real_escape_string($db, $_POST['email']);
     $pass = mysqli_real_escape_string($db, $_POST['pass']);
     $cpass = mysqli_real_escape_string($db, $_POST['cpass']);

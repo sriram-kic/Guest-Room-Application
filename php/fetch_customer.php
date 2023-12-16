@@ -1,17 +1,18 @@
 <?php
-
 include "connect.php";
+
 // Fetch room details from the database based on the selected date
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedDate = $_POST['date'];
-    
+
     // Implement your query to fetch room details from the database
     $query = "SELECT 
-                property_name, room_number, room_type, num_of_beds, floor_size_sqft, rent_per_day,
+                property_name, room_number, room_type, num_of_beds, floor_size_sqft, min_booking_period, max_booking_period, rent_per_day,
                 address, city, country, contact_name, contact_email, contact_phone,
-                amenities, additional_details, photo_paths
-              FROM rooms";
-    
+                amenities, additional_details, photo_paths, status
+              FROM rooms
+              WHERE status = 'Available'";
+
     $result = $db->query($query);
 
     $roomDetails = [];
@@ -24,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'room_type' => $row['room_type'],
                 'num_of_beds' => $row['num_of_beds'],
                 'floor_size_sqft' => $row['floor_size_sqft'],
+                'min_booking_period' => $row['min_booking_period'],
+                'max_booking_period' => $row['max_booking_period'],
                 'rent_per_day' => $row['rent_per_day'],
                 'address' => $row['address'],
                 'city' => $row['city'],
@@ -42,5 +45,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $db->close();
-
 ?>

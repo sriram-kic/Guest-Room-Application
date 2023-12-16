@@ -1,5 +1,20 @@
+<!-- PHP code to fetch and print booking history -->
 <?php
+include "php/connect.php";
 include "php/session.php";
+
+// Get the logged-in user ID
+$logged_user_id = $_SESSION['login_user'];
+
+// Fetch booking history for the logged-in user
+$query = "SELECT * FROM bookings WHERE user_id = ?";
+$stmt = $db->prepare($query);
+$stmt->bind_param("i", $logged_user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$booking_history = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+$db->close();
 ?>
 
 <!DOCTYPE html>
@@ -136,13 +151,68 @@ margin-bottom: 20px;
 <main>
   <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
     <div class="container-fluid">
-        <a class="navbar-brand col-lg-3 me-0 ms-5" href="#">House Owner</a>
-        <div class="d-lg-flex col-lg-3 justify-content-sm-end me-5  ">
-          <img width="48" height="48" src="https://img.icons8.com/color-glass/48/power-off-button.png" id="logoutBtn" alt="power-off-button"/></div>
-        </div>
+      <a class="navbar-brand col-lg-3 me-0 ms-5" href="#">House Owner</a>
+      <div class="d-lg-flex col-lg-6 justify-content-sm-end me-5">
+        <!-- Button to Open Booking History Modal -->
+        <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#bookingHistoryModal">
+          View Booking History
+        </button>
+        <img width="48" height="48" src="https://img.icons8.com/color-glass/48/power-off-button.png" id="logoutBtn" alt="power-off-button"/>
       </div>
     </div>
   </nav>
+</main>
+
+
+<!-- Booking History Modal with Room Details -->
+<div class="modal fade" id="bookingHistoryModal" tabindex="-1" aria-labelledby="bookingHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookingHistoryModalLabel">Booking History with Room Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- DataTable to Display Booking History with Room Details -->
+        <table id="bookingHistoryTable" class="table">
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Room Number</th>
+              <th>Check-in Date</th>
+              <th>Check-out Date</th>
+              <th>Guest Name</th>
+              <!-- Add more columns as needed from rooms_table -->
+              <th>Room Type</th>
+              <th>Floor Size</th>
+              <!-- Add more columns as needed from rooms_table -->
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($booking_history as $booking) : ?>
+              <tr>
+                <td><?= $booking['booking_id']; ?></td>
+                <td><?= $booking['room_number']; ?></td>
+                <td><?= $booking['checkin_date']; ?></td>
+                <td><?= $booking['checkout_date']; ?></td>
+                <td><?= $booking['guest_name']; ?></td>
+                <!-- Retrieve additional details from rooms_table -->
+                <td><?= $booking['room_type']; ?></td>
+                <td><?= $booking['floor_size']; ?></td>
+                <!-- Retrieve additional details from rooms_table -->
+                <td><?= $booking['status']; ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <div>
     <div class="bg-body-tertiaryp-5 rounded">

@@ -35,10 +35,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $photo_paths = implode(",", $uploaded_files);
+    $status = 'Available';
 
-    $stmt = $db->prepare("INSERT INTO rooms (user_id, property_name, room_number, room_type, num_of_beds, floor_size_sqft, min_booking_period, max_booking_period, rent_per_day, address, city, country, contact_name, contact_email, contact_phone, amenities, additional_details, photo_paths) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO rooms (user_id, property_name, room_number, room_type, num_of_beds, floor_size_sqft, min_booking_period, max_booking_period, rent_per_day, address, city, country, contact_name, contact_email, contact_phone, amenities, additional_details, photo_paths, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("ssssssssssssssssss", $_SESSION['login_user'], $property_name, $room_number, $room_type, $num_of_beds, $floor_size_sqft, $min_booking_period, $max_booking_period, $rent_per_day, $address, $city, $country, $contact_name, $contact_email, $contact_phone, $amenities, $additional_details, $photo_paths);
+    // Assuming 'status' is initially set to 'available'
+   
+
+    $stmt->bind_param("sssssssssssssssssss", $_SESSION['login_user'], $property_name, $room_number, $room_type, $num_of_beds, $floor_size_sqft, $min_booking_period, $max_booking_period, $rent_per_day, $address, $city, $country, $contact_name, $contact_email, $contact_phone, $amenities, $additional_details, $photo_paths, $status);
 
     if ($stmt->execute()) {
         echo "Room added successfully!";
