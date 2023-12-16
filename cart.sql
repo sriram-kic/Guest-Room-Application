@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2023 at 04:26 PM
+-- Generation Time: Dec 16, 2023 at 05:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,21 @@ SET time_zone = "+00:00";
 --
 -- Database: `cart`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE `booking` (
+  `booking_id` int(11) NOT NULL,
+  `room_id` int(11) DEFAULT NULL,
+  `customer_name` varchar(100) DEFAULT NULL,
+  `customer_email` varchar(100) DEFAULT NULL,
+  `customer_phone` varchar(20) DEFAULT NULL,
+  `booking_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -54,8 +69,7 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `user_id`, `property_name`, `room_number`, `room_type`, `num_of_beds`, `floor_size_sqft`, `min_booking_period`, `max_booking_period`, `rent_per_day`, `address`, `city`, `country`, `contact_name`, `contact_email`, `contact_phone`, `amenities`, `additional_details`, `photo_paths`) VALUES
-(8, 7, 'Gokulam', '15', 'single', 10, 13000, 1, 30, 200, 'main road', 'chennai', 'India', 'Hai', 'a@gmail.com', '09943576618', 'Parking, TV, Air Conditioning', 'sdfadsf', '../uploads/OIP (1).jpeg,../uploads/OIP.jpeg'),
-(16, 6, 'Gokulam', '1', 'single', 0, 12, 1, 12, 200, 'a@gmail.com', 'karur', 'India', 'Manish', 'a@gmail.com', '6568989897', 'ewrewqr', 'asdfsadfdsa', '../uploads/New-image.png,../uploads/OIP.jpeg');
+(18, 6, 'Gokulam', '1', 'single', 0, 12, 1, 12, 200, 'a@gmail.com', 'karur', 'India', 'Manish', 'a@gmail.com', '6568989897', 'ewrewqr', 'sdfasd', '../uploads/Security On.gif,../uploads/OIP (1).jpeg');
 
 -- --------------------------------------------------------
 
@@ -86,6 +100,13 @@ INSERT INTO `users` (`id`, `email`, `pass`, `contact`, `role`, `password_reset_t
 --
 
 --
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `room_id` (`room_id`);
+
+--
 -- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
@@ -103,10 +124,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `booking`
+--
+ALTER TABLE `booking`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -117,6 +144,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `booking`
+--
+ALTER TABLE `booking`
+  ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`);
 
 --
 -- Constraints for table `rooms`
