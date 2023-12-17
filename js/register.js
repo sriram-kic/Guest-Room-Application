@@ -1,4 +1,3 @@
-// To register the user details
 $(document).on('submit', '#ownerSignupForm', function(e) {
     e.preventDefault();
 
@@ -83,4 +82,16 @@ $(document).on('submit', '#customerSignupForm', function(e) {
             alert('Error occurred, please try again.');
         }
     });
+});
+
+// Check if passwords match
+$(document).on('change', '#pass, #cpass', function() {
+    let pass = $('#pass').val();
+    let cpass = $('#cpass').val();
+
+    if (pass !== cpass) {
+        $('#passwordMismatchAlert').removeClass('d-none');
+    } else {
+        $('#passwordMismatchAlert').addClass('d-none');
+    }
 });
