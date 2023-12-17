@@ -99,4 +99,3 @@ A simple room booking system where customers can browse available rooms, view de
 - Alertify.js
 - SweetAlert2.js
 - fullcalendar.js
-
