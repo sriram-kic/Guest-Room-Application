@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2023 at 06:01 AM
+-- Generation Time: Dec 17, 2023 at 07:37 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -49,9 +49,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `user_id`, `owner_id`, `room_number`, `checkin_date`, `checkout_date`, `adults`, `children`, `property_name`, `customer_name`, `customer_email`, `customer_phone`, `booking_date`, `status`) VALUES
-(2, 8, 7, '1', '2023-12-16', '2023-12-28', 2, 2, 'NK', 'mani', 'mani@gmail.com', '97904015558', '2023-12-17 00:45:58', 'Booked'),
-(3, 5, 6, '21', '2023-12-22', '2023-12-29', 1, 3, 'MKCE', 'Albin', 'aa@gmail.com', '123456789', '2023-12-17 00:49:07', 'Booked'),
-(4, 8, 6, '21', '2023-12-22', '2023-12-21', 1, 2, 'MKCE', 'narain', 'nk@gmail.com', '123456789', '2023-12-17 09:16:14', 'Booked');
+(5, 10, 9, '2A', '2023-12-17', '2023-12-20', 1, 2, 'VKN Guest', 'John', 'john@gmail.com', '12345678', '2023-12-17 11:50:17', 'Booked'),
+(6, 13, 12, '27A', '2023-12-18', '2023-12-22', 2, 1, 'Icehotel', 'Narain', 'narain@gmail.ccom', '9856236524', '2023-12-17 12:05:16', 'Booked');
 
 -- --------------------------------------------------------
 
@@ -87,9 +86,12 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `user_id`, `property_name`, `room_number`, `room_type`, `num_of_beds`, `floor_size_sqft`, `min_booking_period`, `max_booking_period`, `rent_per_day`, `address`, `city`, `country`, `contact_name`, `contact_email`, `contact_phone`, `amenities`, `additional_details`, `photo_paths`, `status`) VALUES
-(19, 7, 'NK', '1', 'single', 1, 65, 1, 14, 100, 'asdflkjas', 'adffsa', 'safadsa', 'mani', 'mani@gmail.com', '123456', 'wifi,ac', '', '../uploads/OIP.jpg,../uploads/R.jpg', 'Booked'),
-(21, 6, 'MKCE', '21', 'single', 6, 100, 1, 30, 100, 'asdflkjas', 'Karur', 'India', 'kantha', 'kantha@gmail.com', '123456', 'wifi,ac', '', '../uploads/R.jpg', 'Booked'),
-(22, 6, 'MKCE', '21', 'single', 6, 100, 1, 30, 100, 'asdflkjas', 'Karur', 'India', 'kantha', 'kantha@gmail.com', '123456', 'wifi,ac', 'ddsafsafas', '../uploads/OIP.jpg,../uploads/R.jpg', 'Booked');
+(23, 9, 'MKCE', '21', 'single', 6, 100, 1, 30, 100, '24, Main Road', 'Karur', 'India', 'kantha', 'kantha@gmail.com', '123456', 'wifi,ac, parking', 'TV', '../uploads/OIP.jpg,../uploads/R.jpg', 'Available'),
+(24, 9, 'VKN Guest', '2A', 'single', 1, 150, 1, 15, 500, '15, North Street', 'Karur', 'India', 'Mohan', 'mohan@gmail.com', '6589526521', 'wifi,ac, parking', 'sdfsad', '../uploads/OIP.jpg,../uploads/R.jpg', 'Booked'),
+(25, 9, 'Maharaja Residency', '5B', 'double', 2, 250, 1, 25, 100, '8, Cross Street', 'Karur', 'India', 'Muthu', 'muthu@gmail.com', '656158788', 'wifi,ac, parking', 'tv, extra bed available', '../uploads/OIP.jpg,../uploads/R.jpg', 'Available'),
+(26, 12, 'Icehotel', '27A', 'single', 2, 110, 1, 10, 800, '8, South Street', 'Karur', 'India', 'peter', 'peter@gmail.com', '656565', 'wifi,ac, parking', '', '../uploads/kama1.jpg,../uploads/OIP (1).jpg', 'Booked'),
+(27, 12, 'Sugar loft aparment', '13D', 'single', 2, 80, 1, 18, 600, '8, East car', 'Karur', 'India', 'mani', 'mani@gmail.com', '656895622', 'wifi,ac, parking', 'tv', '../uploads/kama1.jpg,../uploads/6209818.jpg', 'Available'),
+(28, 12, 'Arctic SnowHotel & Glass Igloos', '23F', 'double', 3, 250, 1, 21, 1200, '8, North car', 'Karur', 'India', 'mani', 'mani@gmail.com', '6568968', 'wifi,ac, parking', 'tv', '../uploads/kama1.jpg,../uploads/OIP (1).jpg,../uploads/6209818.jpg', 'Available');
 
 -- --------------------------------------------------------
 
@@ -110,10 +112,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `pass`, `contact`, `role`) VALUES
-(5, 'abc@gmail.com', '123', 123, 'CUSTOMER'),
-(6, 'tamil@gmail.com', '123', 9846555, 'OWNER'),
-(7, 'surusri8@gmail.com', '123', 123456789, 'OWNER'),
-(8, 'newc@gmail.com', '123', 65689898, 'CUSTOMER');
+(9, 'testhouse@gmail.com', 'Hai@12345', 2147483647, 'OWNER'),
+(10, 'testcus@gmail.com', 'cus@12345', 985624546, 'CUSTOMER'),
+(12, 'testow@gmail.com', 'ow@2345', 56686587, 'OWNER'),
+(13, 'cus@gmail.com', 'cus@123', 98526523, 'CUSTOMER');
 
 --
 -- Indexes for dumped tables
@@ -148,19 +150,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
