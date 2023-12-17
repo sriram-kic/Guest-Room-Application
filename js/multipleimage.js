@@ -1,4 +1,4 @@
-
+// To add multiple images through add more choosen in the owner module
 function addPhotoInput() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';

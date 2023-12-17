@@ -2,12 +2,11 @@
 
 include "connect.php";
 
-// Check if room_id is provided
 if (isset($_GET['room_id'])) {
     $room_id = $_GET['room_id'];
 
 
-    // Prepare and execute the SQL query
+    // Fetch all from rooms details where id=id
     $sql = "SELECT * FROM rooms WHERE id = ?";
     $stmt = $db->prepare($sql);
     $stmt->bind_param('i', $room_id);

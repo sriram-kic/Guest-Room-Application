@@ -24,7 +24,6 @@
     <script src="js/register.js"></script>
 <script src="js/login.js"></script>
 <script src="js/logout.js"></script>
-<script src="js/forgotpw.js"></script>
 </head>
 
 <body>
@@ -73,12 +72,6 @@ height: 100%;
                         </div>
                     </div>
 
-                    <div class="forgot mt-3">
-                        <p style="text-align: end;">
-                            <a href="#" class="link-offset-2 link-underline link-underline-opacity-0"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">Forgotten password?</a>
-                        </p>
-                    </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-sm btn-primary" name="login">Login</button>
                     </div>

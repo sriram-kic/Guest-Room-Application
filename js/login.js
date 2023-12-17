@@ -1,7 +1,8 @@
+    // To check login data is found or not with email and password
 $(document).on('submit', '#login', function(e) {
     e.preventDefault();
 
-    var formData = new FormData(this);
+    let formData = new FormData(this);
     formData.append("login", true);
 
     $.ajax({
@@ -11,7 +12,7 @@ $(document).on('submit', '#login', function(e) {
         processData: false,
         contentType: false,
         success: function(response) {
-            var res = JSON.parse(response);
+            let res = JSON.parse(response);
             if (res.status == 422 || res.status == 500) {
                 $('#loginerrorMessage').removeClass('d-none').text(res.message);
             } else if (res.status == 300) {

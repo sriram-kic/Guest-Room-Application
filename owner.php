@@ -156,7 +156,11 @@ margin-bottom: 20px;
         <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#bookingHistoryModal">
           View Booking History
         </button>
-        <img width="48" height="48" src="https://img.icons8.com/color-glass/48/power-off-button.png" id="logoutBtn" alt="power-off-button"/>
+        <div class="d-lg-flex col-lg-3 justify-content-sm-end me-5">
+    <img width="48" height="48" src="https://img.icons8.com/color-glass/48/power-off-button.png" id="logoutBtn" alt="power-off-button"/>
+    <span class="ms-2" id="logoutSpan">Logout</span>
+</div>
+
       </div>
     </div>
   </nav>
@@ -248,7 +252,7 @@ margin-bottom: 20px;
                 <td><?= $booking['customer_email']; ?></td>
                 <td><?= $booking['customer_phone']; ?></td>
                 <td><?= $booking['booking_date']; ?></td>
-                <td class="<?= $booking['status'] === 'booked' ? 'status-booked' : ''; ?>"><?= $booking['status']; ?></td>
+                <td class="<?= $booking['status'] === 'Booked' ? 'status-booked' : ''; ?>"><?= $booking['status']; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -498,111 +502,7 @@ margin-bottom: 20px;
         </div>
     </div>
 
-
-    <!-- Your HTML content, including the modal and other elements -->
-
-    <script>
-       
- // Event listener for "Edit" button click
- $(document).on('click', '.btn-edit', function () {
-    var roomId = $(this).data('room-id');
-    console.log(roomId);
-    // Fetch room data using AJAX
-    $.ajax({
-        url: 'php/fetch_room_details.php',
-        method: 'GET',
-        data: { room_id: roomId },
-        dataType: 'json',
-        success: function (response) {
-            // response=JSON.parse(response);
-            if (response.success) {
-                // Populate modal fields with the fetched data
-                populateModalFields(response.data);
-                $("#bookedHistoryTable").load(" #bookedHistoryTable > *");
-                $('#editModal').modal('show');
-            } else {
-                console.error('Error fetching room data:', response.error);
-            }
-        },
-        error: function (error) {
-            console.error('Error fetching room data:', error);
-        }
-    });
-});
-
-// Event listener for Save Changes button
-$('#saveChangesBtn').click(function () {
-    // Get the room ID from the modal data attribute
-    var roomId = $('.btn-edit').data('room-id');
-
-
-    // Collect updated data from modal fields
-    var updatedData = {
-        property_name: $('#editable_property_name').val(),
-        room_number: $('#editable_room_number').val(),
-        room_type: $('#editable_room_type').val(),
-        num_of_beds: $('#editable_num_of_beds').val(),
-        floor_size_sqft: $('#editable_floor_size').val(),
-        min_booking_period: $('#editable_min_booking_period').val(),
-        max_booking_period: $('#editable_max_booking_period').val(),
-        rent_per_day: $('#editable_rent_per_day').val(),
-        address: $('#editable_address').val(),
-        city: $('#editable_city').val(),
-        country: $('#editable_country').val(),
-        contact_name: $('#editable_contact_name').val(),
-        contact_email: $('#editable_contact_email').val(),
-        contact_phone: $('#editable_contact_phone').val(),
-        additional_details: $('#editable_additional_details').val()
-    };
-
-    console.log(roomId);
-    console.log(updatedData);
-
-    $.ajax({
-        url: 'php/update_room.php',
-        method: 'POST',
-        data: { room_id: roomId, updated_data: updatedData },
-        dataType: 'json',
-        success: function (response) {
-            if (response.success) {
-                $('#editModal').modal('hide');
-                $("#bookedHistoryTable").load(" #bookedHistoryTable > *");
-                location.reload("owner.php");
-                alertify.success('Changes saved successfully!');
-            } else {
-                console.error('Error saving changes:', response.error);
-                // Show an error message if needed
-                alert('Error saving changes. Please try again.');
-            }
-        },
-        error: function (error) {
-            console.error('Error saving changes:', error);
-            // Show an error message if needed
-            alert('Error saving changes. Please try again.');
-        }
-    });
-});
-
-// Your existing code for modal population
-function populateModalFields(roomData) {
-    // Implement your logic to populate modal fields
-    $('#editable_property_name').val(roomData.property_name);
-    $('#editable_room_number').val(roomData.room_number);
-    $('#editable_room_type').val(roomData.room_type);
-    $('#editable_num_of_beds').val(roomData.num_of_beds);
-    $('#editable_floor_size').val(roomData.floor_size_sqft);
-    $('#editable_min_booking_period').val(roomData.min_booking_period);
-    $('#editable_max_booking_period').val(roomData.max_booking_period);
-    $('#editable_rent_per_day').val(roomData.rent_per_day);
-    $('#editable_address').val(roomData.address);
-    $('#editable_city').val(roomData.city);
-    $('#editable_country').val(roomData.country);
-    $('#editable_contact_name').val(roomData.contact_name);
-    $('#editable_contact_email').val(roomData.contact_email);
-    $('#editable_contact_phone').val(roomData.contact_phone);
-    $('#editable_additional_details').val(roomData.additional_details);
-}
-    </script>
+    
 
 
 </body>

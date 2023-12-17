@@ -2,11 +2,33 @@
 <?php
 include "php/connect.php";
 include "php/session.php";
+
 // Get the logged-in user ID
 $logged_user_id = $_SESSION['login_user'];
 
-// Fetch booked history for the logged-in user
-$query = "SELECT * FROM bookings WHERE user_id = ?";
+// Fetch booked history for the logged-in user with room details
+$query = "
+    SELECT
+        b.booking_id,
+        r.room_number,
+        b.checkin_date,
+        b.checkout_date,
+        b.adults,
+        b.children,
+        b.property_name,
+        b.booking_date,
+        b.status,
+        r.contact_name,
+        r.contact_email,
+        r.contact_phone
+    FROM
+        bookings b
+    JOIN
+        rooms r ON b.room_number = r.room_number
+    WHERE
+        b.user_id = ?
+";
+
 $stmt = $db->prepare($query);
 $stmt->bind_param("i", $logged_user_id);
 $stmt->execute();
@@ -34,32 +56,35 @@ $db->close();
 
 
     <script src="js/logout.js"></script>
-    <!-- Add this line to include SweetAlert library -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!--SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 
 </head>
 
 <body>
 
-<main>
-      <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
-    <div class="container-fluid">
-        <a class="navbar-brand col-lg-3 me-0 ms-5" href="#">Customer</a>
-        <div class="d-flex justify-content-between col-lg-6 me-5">
-            <!-- Button to Open Booked History Modal -->
-            <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#bookedHistoryModal">
-                View Booked History
-            </button>
-            <img width="48" height="48" src="https://img.icons8.com/color-glass/48/power-off-button.png" id="logoutBtn" alt="power-off-button" />
-        </div>
-    </div>
-</nav>
-</main> 
+    <main>
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Thirteenth navbar example">
+            <div class="container-fluid">
+                <a class="navbar-brand col-lg-3 me-0 ms-5" href="#">Customer</a>
+                <div class="d-flex justify-content-between col-lg-6 me-5">
+                    <!-- Booked History Modal -->
+                    <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#bookedHistoryModal">
+                        View Booked History
+                    </button>
+                    <div class="d-lg-flex col-lg-3 justify-content-sm-end me-5">
+                        <img width="48" height="48" src="https://img.icons8.com/color-glass/48/power-off-button.png" id="logoutBtn" alt="power-off-button" />
+                        <span class="ms-2" id="logoutSpan">Logout</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </main>
 
 
- 
+
 
     <!-- Booked History Modal -->
     <div class="modal fade" id="bookedHistoryModal" tabindex="-1" aria-labelledby="bookedHistoryModalLabel" aria-hidden="true">
@@ -72,84 +97,96 @@ $db->close();
                 <div class="modal-body">
 
 
-                <style>
-    /* Custom styles for the modal and DataTable */
-    #bookedHistoryModal {
-        background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    }
+                    <style>
+                        #bookedHistoryModal {
+                            background: rgba(0, 0, 0, 0.5);
+                            /* Semi-transparent background */
+                        }
 
-    #bookedHistoryModal .modal-content {
-        background-color: #fff; /* White background */
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for a subtle lift */
-    }
+                        #bookedHistoryModal .modal-content {
+                            background-color: #fff;
+                            /* White background */
+                            border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                            /* Box shadow for a subtle lift */
+                        }
 
-    #bookedHistoryTable {
-        width: 100%;
-        border-collapse: collapse;
-    }
+                        #bookedHistoryTable {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
 
-    #bookedHistoryTable th, #bookedHistoryTable td {
-        border: 1px solid #ddd; /* Border between cells */
-        padding: 8px;
-        text-align: left;
-    }
+                        #bookedHistoryTable th,
+                        #bookedHistoryTable td {
+                            border: 1px solid #ddd;
+                            /* Border between cells */
+                            padding: 8px;
+                            text-align: left;
+                        }
 
-    #bookedHistoryTable th {
-        background-color: #3498db; /* Blue background for header cells */
-        color: #fff; /* White text color */
-    }
+                        #bookedHistoryTable th {
+                            background-color: #3498db;
+                            /* Blue background for header cells */
+                            color: #fff;
+                            /* White text color */
+                        }
 
-    #bookedHistoryTable tbody tr:hover {
-        background-color: #f5f5f5; /* Light gray background on hover */
-    }
+                        #bookedHistoryTable tbody tr:hover {
+                            background-color: #f5f5f5;
+                            /* Light gray background on hover */
+                        }
 
-    #bookedHistoryTable .status-booked {
-        color: #27ae60; /* Green color for 'booked' status */
-        font-weight: bold;
-    }
+                        #bookedHistoryTable .status-booked {
+                            color: #27ae60;
+                            /* Green color for 'booked' status */
+                            font-weight: bold;
+                        }
 
-    #bookedHistoryModal .modal-footer {
-        border-top: 1px solid #ddd; /* Border above the modal footer */
-    }
+                        #bookedHistoryModal .modal-footer {
+                            border-top: 1px solid #ddd;
+                            /* Border above the modal footer */
+                        }
 
-    #bookedHistoryModal .modal-footer button {
-        background-color: #3498db; /* Blue background for buttons */
-        color: #fff; /* White text color */
-    }
-</style>
+                        #bookedHistoryModal .modal-footer button {
+                            background-color: #3498db;
+                            /* Blue background for buttons */
+                            color: #fff;
+                            /* White text color */
+                        }
+                    </style>
 
-                    <!-- DataTable to Display Booked History -->
+                    <!-- Display Booked History -->
                     <table id="bookedHistoryTable" class="table">
-    <thead>
-        <tr>
-            <th>Booking ID</th>
-            <th>Room Number</th>
-            <th>Guest House name</th>
-            <th>Check-in Date</th>
-            <th>Check-out Date</th>
-            <th>Adults</th>
-            <th>Children</th>
-            <th>Booking date</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($booked_history as $booking) : ?>
-            <tr>
-                <td><?= $booking['booking_id']; ?></td>
-                <td><?= $booking['room_number']; ?></td>
-                <td><?= $booking['property_name']; ?></td>
-                <td><?= $booking['checkin_date']; ?></td>
-                <td><?= $booking['checkout_date']; ?></td>
-                <td><?= $booking['adults']; ?></td>
-                <td><?= $booking['children']; ?></td>
-                <td><?= $booking['booking_date']; ?></td>
-                <td class="<?= $booking['status'] === 'booked' ? 'status-booked' : ''; ?>"><?= $booking['status']; ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+                        <thead>
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Guest House name</th>
+                                <th>Guest House Email</th>
+                                <th>Guest House Mobile</th>
+                                <th>Check-in Date</th>
+                                <th>Check-out Date</th>
+                                <th>Guests</th> <!-- Combined Adults and Children -->
+                                <th>Booking date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($booked_history as $booking) : ?>
+                                <tr>
+                                    <td><?= $booking['room_number']; ?></td>
+                                    <td><?= $booking['property_name']; ?></td>
+                                    <td><?= $booking['contact_email']; ?></td>
+                                    <td><?= $booking['contact_phone']; ?></td>
+                                    <td><?= $booking['checkin_date']; ?></td>
+                                    <td><?= $booking['checkout_date']; ?></td>
+                                    <td><?= $booking['adults'] + $booking['children']; ?></td>
+                                    <td><?= $booking['booking_date']; ?></td>
+                                    <td class="<?= $booking['status'] === 'Booked' ? 'status-booked' : ''; ?>"><?= $booking['status']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -164,114 +201,111 @@ $db->close();
 
     <!-- Modal for Booking -->
     <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Booking Details</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Booking Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label for="propertyName" class="form-label">Property Name</label>
+                            <input type="text" class="form-control" id="propertyName" name="property_name" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomNumber" class="form-label">Room Number</label>
+                            <input type="text" class="form-control" id="roomNumber" name="room_number" readonly>
+                        </div>
+                        <!-- Customer details fields-->
+                        <div class="mb-3">
+                            <label for="customerName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="customerName" name="customer_name" placeholder="E.g John" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="customerEmail" name="customer_email" placeholder="example@gmail.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerPhone" class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control" id="customerPhone" name="customer_phone" placeholder="E.g 96xxxxxxxx" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="checkinDate" class="form-label">Check-in Date</label>
+                            <input type="date" class="form-control" id="checkinDate" name="checkin_date" value="<?= date('Y-m-d') ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="checkoutDate" class="form-label">Check-out Date</label>
+                            <input type="date" class="form-control" id="checkoutDate" name="checkout_date" value="<?= date('Y-m-d') ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adults" class="form-label">Number of Adults</label>
+                            <input type="number" class="form-control" id="adults" name="adults" placeholder="Enter number of adults" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="children" class="form-label">Number of Children</label>
+                            <input type="number" class="form-control" id="children" name="children" placeholder="Enter number of children" required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Submit Booking</button>
+                </div>
+                </form>
             </div>
-            <div class="modal-body">
-                <form id="bookingForm">
-                    <!-- Add room number and property name fields in the modal -->
-                    <div class="mb-3">
-                        <label for="propertyName" class="form-label">Property Name</label>
-                        <input type="text" class="form-control" id="propertyName" name="property_name" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="roomNumber" class="form-label">Room Number</label>
-                        <input type="text" class="form-control" id="roomNumber" name="room_number" readonly>
-                    </div>
-                    <!-- Customer details fields (customize as needed) -->
-                    <div class="mb-3">
-                        <label for="customerName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="customerName" name="customer_name" placeholder="E.g John" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="customerEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="customerEmail" name="customer_email" placeholder="example@gmail.com" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="customerPhone" class="form-label">Mobile Number</label>
-                        <input type="tel" class="form-control" id="customerPhone" name="customer_phone" placeholder="E.g 96xxxxxxxx" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="checkinDate" class="form-label">Check-in Date</label>
-                        <input type="date" class="form-control" id="checkinDate" name="checkin_date" value="<?= date('Y-m-d') ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="checkoutDate" class="form-label">Check-out Date</label>
-                        <input type="date" class="form-control" id="checkoutDate" name="checkout_date" value="<?= date('Y-m-d') ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="adults" class="form-label">Number of Adults</label>
-                        <input type="number" class="form-control" id="adults" name="adults" placeholder="Enter number of adults" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="children" class="form-label">Number of Children</label>
-                        <input type="number" class="form-control" id="children" name="children" placeholder="Enter number of children" required>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success">Submit Booking</button>
-            </div>
-            </form>
         </div>
     </div>
-</div>
 
-<div class="container mt-5">
-    <!-- Add a Check Availability button -->
-    <button class="btn btn-primary" id="checkAvailabilityBtn">Check Availability</button>
+    <div class="container mt-5">
+        <!-- Check Availability button -->
+        <button class="btn btn-primary" id="checkAvailabilityBtn">Check Availability</button>
 
-    <div class="row mt-3" id="roomResults"></div>
-    <div class="row mt-3">
+        <div class="row mt-3" id="roomResults"></div>
+        <div class="row mt-3">
+        </div>
+        <div id="availabilityDetails" class="row mt-3"></div>
     </div>
-    <div id="availabilityDetails" class="row mt-3"></div>
-</div>
 
 
-<script>
-        $(document).ready(function () {
-            // Initialize DataTable for Booked History
+    <script>
+        $(document).ready(function() {
+            // DataTable for Booked History
             $('#bookedHistoryTable').DataTable();
         });
-
-        // Add your logout or other JavaScript logic here
     </script>
 
-<script>
-    $(document).ready(function () {
-        // Initialize FullCalendar
-        $('#roomResults').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            defaultView: 'month',
-            defaultDate: new Date(),
-            validRange: {
-                start: new Date(),
-            },
-            events: [],
-            editable: false,
-            selectable: true,
-            selectHelper: true,
-            select: function (start, end, jsEvent, view) {
-                var selectedDate = start.format('YYYY-MM-DD');
-                fetchAvailableRooms(selectedDate);
-            }
-        });
+    <script>
+        $(document).ready(function() {
+            // FullCalendar
+            $('#roomResults').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                defaultDate: new Date(),
+                validRange: {
+                    start: new Date(),
+                },
+                events: [],
+                editable: false,
+                selectable: true,
+                selectHelper: true,
+                select: function(start, end, jsEvent, view) {
+                    var selectedDate = start.format('YYYY-MM-DD');
+                    fetchAvailableRooms(selectedDate);
+                }
+            });
 
-        // Attach click event to Check Availability button
-        $('#checkAvailabilityBtn').click(function () {
-            // Get the selected date from the calendar
-            var selectedDate = $('#roomResults').fullCalendar('getDate').format('YYYY-MM-DD');
-            // Call the function to handle availability check
-            checkAvailability(selectedDate);
+            // click event to Check Availability button
+            $('#checkAvailabilityBtn').click(function() {
+                // Get the selected date from the calendar
+                var selectedDate = $('#roomResults').fullCalendar('getDate').format('YYYY-MM-DD');
+                // Call the function to handle availability check
+                checkAvailability(selectedDate);
+            });
         });
-    }); 
 
         function fetchAvailableRooms(selectedDate) {
             $.ajax({
@@ -353,30 +387,30 @@ $db->close();
             });
         }
 
-       // ...
-       function bookNow(roomId, propertyName, roomNumber) {
-    // Set the values in the modal
-    $('#selectedRoomId').val(roomId);
-    $('#propertyName').val(propertyName).prop('readonly', true);
-    $('#roomNumber').val(roomNumber).prop('readonly', true);
+        // ...
+        function bookNow(roomId, propertyName, roomNumber) {
+            // Set the values in the modal
+            $('#selectedRoomId').val(roomId);
+            $('#propertyName').val(propertyName).prop('readonly', true);
+            $('#roomNumber').val(roomNumber).prop('readonly', true);
 
-    // Add the room_id to the form data
-    $('#bookingForm').append('<input type="hidden" name="room_id" value="' + roomId + '">');
+            // Add the room_id to the form data
+            $('#bookingForm').append('<input type="hidden" name="room_id" value="' + roomId + '">');
 
-    // Show the modal
-    $('#bookingModal').modal('show');
-}
-// ...
+            // Show the modal
+            $('#bookingModal').modal('show');
+        }
+        // ...
 
 
 
-$('#bookingForm').submit(function (e) {
+        $('#bookingForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
                 url: 'php/customer_book.php',
                 data: $('#bookingForm').serialize(),
-                success: function (response) {
+                success: function(response) {
                     console.log('Success:', response);
 
                     // Trigger SweetAlert on success
@@ -394,13 +428,12 @@ $('#bookingForm').submit(function (e) {
                         }
                     });
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.error('Error submitting booking:', error);
                     alert('Error submitting booking. Please try again.');
                 }
             });
         });
-
     </script>
 </body>
 

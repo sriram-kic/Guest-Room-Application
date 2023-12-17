@@ -1,5 +1,4 @@
 <?php
-// Include your database configuration file
 include "connect.php";
 include "session.php";
 

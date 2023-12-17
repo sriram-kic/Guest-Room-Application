@@ -7,9 +7,7 @@ if (isset($_POST['ownerSignupForm']) || isset($_POST['customerSignupForm'])) {
     $pass = mysqli_real_escape_string($db, $_POST['pass']);
     $cpass = mysqli_real_escape_string($db, $_POST['cpass']);
     $contact = mysqli_real_escape_string($db, $_POST['contact']);
-    $role = ''; // Initialize role variable
-
-    // Validation for mandatory fields
+    $role = '';
     if (empty($email) || empty($pass) || empty($contact) || empty($cpass)) {
         $res = [
             'status' => 422,
@@ -62,7 +60,7 @@ if (mysqli_stmt_num_rows($stmt_check_existing) > 0) {
         $role = 'CUSTOMER';
     }
 
-    // Prepare and execute the SQL statement using prepared statements for insertion
+    // Prepare and execute the SQL statement using prepared statements
     $query_insert = "INSERT INTO users (email, pass, contact, role) VALUES (?, ?, ?, ?)";
     $stmt_insert = mysqli_prepare($db, $query_insert);
 

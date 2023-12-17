@@ -1,3 +1,4 @@
+    // To logout from their respective page
 $(document).ready(function() {
     $('#logoutBtn').click(function() {
         $.ajax({

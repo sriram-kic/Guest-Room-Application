@@ -1,3 +1,4 @@
+// To register the user details
 $(document).on('submit', '#ownerSignupForm', function(e) {
     e.preventDefault();
 
